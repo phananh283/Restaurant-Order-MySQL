@@ -91,4 +91,44 @@
    - Explanation: Used "HAVING" to identify the orders with more than 12 items
    - Output: There are 12 orders with more than 12 items
          
-**OBJECTIVE 3:** To 
+**OBJECTIVE 3:** To find the least and most ordered categories, and dive into the details of the highest spend orders
+
+**1) What were the least and most ordered items? What categories were they in?**
+   - Scripting:
+     SELECT category, item_name, total_orders
+     FROM 
+	    (SELECT category, item_name, COUNT(*) AS total_orders
+      FROM combined_table
+      GROUP BY category, item_name
+      ORDER BY total_orders ASC
+      LIMIT 1
+    ) AS least_item
+
+     UNION
+ 
+     SELECT category, item_name, total_orders
+     FROM 
+	    (SELECT category, item_name, COUNT(*) AS total_orders
+      FROM combined_table
+      GROUP BY category, item_name
+      ORDER BY total_orders DESC
+      LIMIT 1
+    ) AS most_item
+
+   - Explanation: Created a table of the least ordered item and another table of the most ordered item, then combined the 2 tables by using "UNION"
+   - Output:
+     	- The least ordered item is Chicken Tacos of Mexican category, with total orders of 123
+     	- The most ordered item is Hamburger of American category, with total orders of 622
+    
+**2) What were the top 5 orders that spent the most money?**
+   - Scripting:
+     SELECT order_id, SUM(price) AS total_spending
+     FROM combined_table
+     GROUP BY order_id
+     ORDER BY total_spending DESC
+     LIMIT 5
+
+   - Explanation: used LIMIT 5 to get the top 5 orders
+   - Output:
+     	- The top 5 order_id are 440, 2075, 1957, 330, 2675
+     	- The total spending is ranged from $185.10 to $192.15
